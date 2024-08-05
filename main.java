@@ -1,9 +1,9 @@
 
 class Function { // used in stage 2
 
-    private double coefficient;
-    private double resource;
-    private double divisor;
+    private double coefficient;//coeff of x2
+    private double resource;//resource
+    private double divisor;//coeff of x1
 
     public Function(double coefficient, double resource, double divisor) { // constructor to allow us to make functions in stage 2
         this.coefficient = coefficient;
@@ -30,18 +30,6 @@ public class main {
         return max_x1;
     }
 
-    private static double getMinX1(double[][] constraints, double[] resources, int[] conditions) {
-        double min_x1 = 0;
-        for (int i = 0; i < resources.length; i++) {
-            if (constraints[i][0] != 0) { // Avoid division by zero
-                if (conditions[i] == 1) {
-                    min_x1 = Math.max(min_x1, resources[i] / constraints[i][0]);
-                }
-            }
-        }
-        return min_x1;
-    }
-
     public static double getMaxX2(double[][] constraints, double[] resources, int[] conditions) { // find constraints for x2
         double max_x2 = Double.POSITIVE_INFINITY;
         for (int i = 0; i < resources.length; i++) {
@@ -54,16 +42,6 @@ public class main {
         return max_x2;
     }
 
-    // private static double getMinX2(double[][] constraints, double[] resources,int [] conditions) {
-    //     double min_x2 = 0;
-    //     for (int i = 0; i < resources.length; i++) {
-    //         if (constraints[i][1] != 0) { // Avoid division by zero
-    //           if (conditions[i] ==1)
-    //             min_x2 = Math.max(min_x2, resources[i] / constraints[i][1]);
-    //         }
-    //     }
-    //     return min_x2;
-    // }
     private static Function[] createFunctions(double[][] constraints, double[] resources) {
         Function[] functions = new Function[constraints.length];
         for (int i = 0; i < constraints.length; i++) {
@@ -78,12 +56,8 @@ public class main {
         double step = 0.0001;
         double x = 0;
         double xCheckedVal, xVal = 0;
-        System.out.println(x);
-        System.out.println(maxX2);
-        System.out.println(getMaxX1(constraints, resources, conditions));
-        System.out.println(getMinX1(constraints, resources, conditions));
         while (x <= maxX2) {
-            xCheckedVal = getMaxX1(constraints, resources, conditions);
+            xCheckedVal = getMaxX1(constraints, resources, conditions);//highest possible balue
             for (int i = 0; i < functions.length; i++) {
                 if (conditions[i] != 1) {
                     xVal = functions[i].getX1(x);
@@ -95,31 +69,31 @@ public class main {
             }
             int errors = 0;
             double value = coefficients[0] * xCheckedVal + coefficients[1] * x;
-            for (int i = 0; i < constraints.length; i++) {
+            for (int i = 0; i < constraints.length; i++) {// ensure that for current values of x1 and x2 it follows restraints
                 if (conditions[i] == 1 && constraints[i][0] * xCheckedVal + constraints[i][1] * x < constraints[i][2]) {
                     errors++; 
                 }else if (conditions[i] == 0 && constraints[i][0] * xCheckedVal + constraints[i][1] * x > constraints[i][2]) {
                     errors++;
                 }
             }
-            if (errors > 0) {
+            if (errors > 0) {//should have 0 errors or we dont update maxvalue
                 x += step;
                 continue;
             }
-            maximumVal = Math.max(maximumVal, value);
+            maximumVal = Math.max(maximumVal, value);//maxvalue
             x += step;
         }
         return maximumVal;
     }
 
     public static void main(String[] args) {
-        double[][] constraints = {{10, 17, 120}, {13, 21, 20}, {4, 5, 48}};// accept input
-        int[] conditions = {0, 1, 0};
-        double[] coefficients = {40, 50};
+        double[][] constraints = {{1,1,16}, {2, 1, 20}};// accept input
+        int[] conditions = {0, 0};
+        double[] coefficients = {40, 30};
         double[] resources = new double[constraints.length];
         int counter = 0;
 
-        for (int i = 0; i < constraints.length; i++) {
+        for (int i = 0; i < constraints.length; i++) {// make column 2 of constraints the resources array
             for (int j = 0; j < constraints[i].length; j++) {
                 if (j == 2) {
                     resources[counter] = constraints[i][j];
