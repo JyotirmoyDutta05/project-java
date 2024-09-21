@@ -1,126 +1,138 @@
-import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import javax.swing.*;
+
+class ConstraintRow {
+    private JPanel rowPanel;
+    private JTextField x1Field;
+    private JTextField x2Field;
+    private JComboBox<String> inequalityBox;
+    private JTextField resultField;
+
+    // Constructor to create the row with its components
+    public ConstraintRow() {
+        rowPanel = new JPanel();
+        rowPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        rowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40)); 
+        rowPanel.setBackground(new Color(209, 197, 180)); 
+
+        JLabel lcX1 = new JLabel("X1 +");
+        x1Field = new JTextField();
+        x1Field.setPreferredSize(new Dimension(50, 30));
+
+        JLabel lcX2 = new JLabel("X2");
+        x2Field = new JTextField();
+        x2Field.setPreferredSize(new Dimension(50, 30));
+
+        String[] inequalities = {"<=", ">="};
+        inequalityBox = new JComboBox<>(inequalities);
+        inequalityBox.setPreferredSize(new Dimension(60, 30));
+
+        resultField = new JTextField();
+        resultField.setPreferredSize(new Dimension(50, 30));
+
+        rowPanel.add(x1Field);
+        rowPanel.add(lcX1);
+        rowPanel.add(x2Field);
+        rowPanel.add(lcX2);
+        rowPanel.add(inequalityBox);
+        rowPanel.add(resultField);
+    }
+
+    // Method to return the JPanel representing this row
+    public JPanel getRowPanel() {
+        return rowPanel;
+    }
+}
 
 public class LinearProgrammingGUI {
 
+    static ArrayList<ConstraintRow> constraintRows = new ArrayList<>();
+    static JPanel rowContainer;
+
+
     public static void main(String[] args) {
-        // Create a new JFrame
+  
         JFrame frame = new JFrame("Linear Programming Problems");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 600);
-
-        // Set the layout to null for absolute positioning
-        frame.setLayout(null);
-
-        // Set background color
         frame.getContentPane().setBackground(new Color(209, 197, 180));
-
-        // Create the heading label
+        frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+   
         JLabel heading = new JLabel("LPP Solver");
-        heading.setBounds(50, 10, 400, 30);
-        heading.setHorizontalAlignment(SwingConstants.CENTER);
+        heading.setAlignmentX(Component.CENTER_ALIGNMENT);
         heading.setForeground(Color.BLACK);
 
-        // Create labels and text fields for the Z function
-        JLabel lz = new JLabel("Z =");
-        JLabel lx1 = new JLabel("X1 +");
-        JLabel lx2 = new JLabel("X2");
-        JTextField tx1 = new JTextField();
-        JTextField tx2 = new JTextField();
-
-        lz.setBounds(160, 50, 30, 30);
-        tx1.setBounds(200, 50, 50, 30);
-        lx1.setBounds(260, 50, 50, 30);
-        tx2.setBounds(310, 50, 50, 30);
-        lx2.setBounds(370, 50, 50, 30);
-
-        // Create radio buttons for Maximize and Minimize
-        JRadioButton max = new JRadioButton("Maximize");
-        JRadioButton min = new JRadioButton("Minimize");
-        ButtonGroup bg = new ButtonGroup();
-        bg.add(max);
-        bg.add(min);
-        max.setBounds(150, 100, 100, 30);
-        min.setBounds(260, 100, 100, 30);
-        max.setSelected(true);
-
-        // Create the constraints instruction label
-        JLabel constraintsLabel = new JLabel("Enter the constraints as shown:");
-        constraintsLabel.setBounds(50, 150, 400, 30);
-        constraintsLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        constraintsLabel.setForeground(Color.BLACK);
-
-        // Create labels and text fields for constraints
-        JLabel lc1x1 = new JLabel("X1 +");
-        JLabel lc1x2 = new JLabel("X2");
-        JLabel lc2x1 = new JLabel("X1 +");
-        JLabel lc2x2 = new JLabel("X2");
-        JTextField tc1x1 = new JTextField();
-        JTextField tc1x2 = new JTextField();
-        JTextField tc2x1 = new JTextField();
-        JTextField tc2x2 = new JTextField();
-        JTextField tc1r1 = new JTextField();
-        JTextField tc2r2 = new JTextField();
-        String[] inequalities = {"<=", ">="};
-        JComboBox<String> cb1 = new JComboBox<>(inequalities);
-        JComboBox<String> cb2 = new JComboBox<>(inequalities);
-
-        lc1x1.setBounds(230, 200, 30, 30);
-        tc1x1.setBounds(170, 200, 50, 30);
-        lc1x2.setBounds(330, 200, 30, 30);
-        tc1x2.setBounds(270, 200, 50, 30);
-        cb1.setBounds(350, 200, 60, 30);
-        tc1r1.setBounds(420, 200, 50, 30);
-
-        lc2x1.setBounds(230, 250, 30, 30);
-        tc2x1.setBounds(170, 250, 50, 30);
-        lc2x2.setBounds(330, 250, 30, 30);
-        tc2x2.setBounds(270, 250, 50, 30);
-        cb2.setBounds(350, 250, 60, 30);
-        tc2r2.setBounds(420, 250, 50, 30);
-
-        // Create the calculate button
-        JButton calculateButton = new JButton("Calculate");
-        calculateButton.setBounds(250, 300, 100, 30);
-
-        // Set text color to black for all labels and text fields
-        heading.setForeground(Color.BLACK);
-        lz.setForeground(Color.BLACK);
-        lx1.setForeground(Color.BLACK);
-        lx2.setForeground(Color.BLACK);
-        max.setForeground(Color.BLACK);
-        min.setForeground(Color.BLACK);
-        constraintsLabel.setForeground(Color.BLACK);
-        lc1x1.setForeground(Color.BLACK);
-        lc1x2.setForeground(Color.BLACK);
-        lc2x1.setForeground(Color.BLACK);
-        lc2x2.setForeground(Color.BLACK);
-
-        // Add components to the frame
+        frame.add(Box.createRigidArea(new Dimension(0, 10)));
         frame.add(heading);
-        frame.add(lz);
-        frame.add(tx1);
-        frame.add(lx1);
-        frame.add(tx2);
-        frame.add(lx2);
-        frame.add(max);
-        frame.add(min);
-        frame.add(constraintsLabel);
-        frame.add(lc1x1);
-        frame.add(tc1x1);
-        frame.add(lc1x2);
-        frame.add(tc1x2);
-        frame.add(cb1);
-        frame.add(tc1r1);
-        frame.add(lc2x1);
-        frame.add(tc2x1);
-        frame.add(lc2x2);
-        frame.add(tc2x2);
-        frame.add(cb2);
-        frame.add(tc2r2);
-        frame.add(calculateButton);
+        frame.add(Box.createRigidArea(new Dimension(0, 10)));
+ 
+        rowContainer = new JPanel();
+        rowContainer.setLayout(new BoxLayout(rowContainer, BoxLayout.Y_AXIS));
+        frame.add(rowContainer);
+        addConstraintRow();
+        addConstraintRow();
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
 
-        // Set frame to visible
+        JButton plusButton = new JButton("+");
+        plusButton.setPreferredSize(new Dimension(50, 30));
+        plusButton.addActionListener(e -> {
+            if (constraintRows.size() < 10) {
+                addConstraintRow();
+                frame.revalidate();
+                frame.repaint();
+            }
+        });
+
+
+        JButton minusButton = new JButton("-");
+        minusButton.setPreferredSize(new Dimension(50, 30));
+        minusButton.addActionListener(e -> {
+            if (constraintRows.size() > 1) {
+                removeConstraintRow();
+                frame.revalidate();
+                frame.repaint();
+            }
+        });
+
+
+        buttonPanel.add(plusButton);
+        buttonPanel.add(minusButton);
+        buttonPanel.setBackground(new Color(209, 197, 180));
+
+        frame.add(buttonPanel);
+
+        JButton calculateButton = new JButton("Calculate");
+        JTextField output = new JTextField();
+        output.setPreferredSize(new Dimension(200, 40));
+
+        // Center the button and output
+        JPanel row6 = new JPanel();
+        row6.setLayout(new FlowLayout(FlowLayout.CENTER));
+        row6.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40)); 
+        row6.setBackground(new Color(209, 197, 180)); 
+        row6.add(calculateButton);
+        row6.add(output);
+
+        frame.add(row6);
+
         frame.setVisible(true);
+    }
+
+    // add another constraint row
+    private static void addConstraintRow() {
+        ConstraintRow constraintRow = new ConstraintRow();
+        constraintRows.add(constraintRow);//add rows
+        rowContainer.add(constraintRow.getRowPanel());
+    }
+
+    // remove last row
+    private static void removeConstraintRow() {
+        if (!constraintRows.isEmpty()) {
+            ConstraintRow lastRow = constraintRows.remove(constraintRows.size() - 1);//pop out last element ad set that last row
+            rowContainer.remove(lastRow.getRowPanel());
+        }
     }
 }
