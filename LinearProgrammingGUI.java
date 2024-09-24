@@ -99,7 +99,7 @@ public class LinearProgrammingGUI {
 
         JFrame frame = new JFrame("Linear Programming Problems");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 600);
+        frame.setSize(1920, 1080);
         frame.getContentPane().setBackground(Color.decode("#FAF7F0"));
         frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 
@@ -159,20 +159,25 @@ public class LinearProgrammingGUI {
         frame.add(maxMin);
         rowContainer = new JPanel();
         rowContainer.setLayout(new BoxLayout(rowContainer, BoxLayout.Y_AXIS));
+
+        rowContainer.setPreferredSize(new Dimension(Integer.MAX_VALUE, 500));
+        rowContainer.setBackground(Color.decode("#FAF7F0"));
         frame.add(rowContainer);
         addConstraintRow();
         addConstraintRow();
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        buttonPanel.setMaximumSize(new Dimension(1000, 45));
 
         JButton plusButton = new JButton("+");
         plusButton.setPreferredSize(new Dimension(50, 30));
         plusButton.addActionListener(e -> {
-            if (constraintRows.size() < 10) {
+            if (constraintRows.size() < 5) {
                 addConstraintRow();
                 frame.revalidate();
                 frame.repaint();
+                buttonPanel.revalidate();
+                buttonPanel.repaint();
             }
         });
         plusButton.setBackground(Color.decode("#B17457"));
@@ -192,8 +197,8 @@ public class LinearProgrammingGUI {
 
         buttonPanel.add(plusButton);
         buttonPanel.add(minusButton);
-        buttonPanel.setBackground(Color.decode("#FAF7F0"));
-
+        buttonPanel.setOpaque(false);
+        buttonPanel.setBackground(new Color(0, 0, 0, 0));
         frame.add(buttonPanel);
 
         JButton calculateButton = new JButton("Calculate");
@@ -230,9 +235,14 @@ public class LinearProgrammingGUI {
 
     // add another constraint row
     private static void addConstraintRow() {
+
         ConstraintRow constraintRow = new ConstraintRow();
         constraintRows.add(constraintRow);//add rows
         rowContainer.add(constraintRow.getRowPanel());
+        int newheight=rowContainer.getSize().height;
+        rowContainer.setPreferredSize(new Dimension(Integer.MAX_VALUE,newheight+50));
+        rowContainer.revalidate();
+        rowContainer.repaint();
     }
 
     // remove last row
@@ -240,13 +250,17 @@ public class LinearProgrammingGUI {
         if (!constraintRows.isEmpty()) {
             ConstraintRow lastRow = constraintRows.remove(constraintRows.size() - 1);//pop out last element ad set that last row
             rowContainer.remove(lastRow.getRowPanel());
+            int newheight=rowContainer.getSize().height;
+            rowContainer.setPreferredSize(new Dimension(Integer.MAX_VALUE,newheight-50));
+            rowContainer.revalidate();
+            rowContainer.repaint();
         }
     }
 
     static double getMaxX1(double[][] constraints, int[] conditions) {
         double max_x1 = Double.POSITIVE_INFINITY; // Initialize max_x1 to positive infinity
         for (int i = 0; i < constraints.length; i++) {
-            if (constraints[i][0] != 0) { // Avoid division by zero
+            if (constraints[i][0] > 0) { // Avoid division by zero
                 if (conditions[i] < 1) { // Check if the condition is less than or equal
                     max_x1 = Math.min(max_x1, constraints[i][2] / constraints[i][0]); // Update max_x1
                 }
@@ -264,7 +278,7 @@ public class LinearProgrammingGUI {
                 }
             }
         }
-        return max_x2; // Return the maximum value of x2 found
+        return max_x2+1000; // Return the maximum value of x2 found
     }
 
     private static Function[] createFunctions(double[][] constraints) {
@@ -439,6 +453,18 @@ public class LinearProgrammingGUI {
                     JOptionPane.ERROR_MESSAGE);
             return; // Stop execution if there was a general exception
         }
+
+        for (int i = 0; i < numConstraints; i++) {
+            if (constraints[i][1] < 0) { // Check if x2Value is negative
+                constraints[i][0] *= -1; // Flip Signs
+                constraints[i][1] *= -1; 
+                constraints[i][2] *= -1; 
+
+                // Flip the condition va;lues
+                conditions[i] = (conditions[i] == 0) ? 1 : 0; 
+            }
+        }
+
         boolean max = "Maximize" == comboBox.getSelectedItem();
         double[] ans = new double[3];
 
