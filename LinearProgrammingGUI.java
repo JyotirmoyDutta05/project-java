@@ -34,14 +34,14 @@ class ConstraintRow {
     public ConstraintRow() {
         rowPanel = new JPanel();
         rowPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        rowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        rowPanel.setBackground(Color.decode("#FAF7F0"));
-
+        rowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        rowPanel.setBackground(Color.decode("#CCFFFFF"));
         JLabel lcX1 = new JLabel("X1 +");
         x1Field = new JTextField();
         x1Field.setPreferredSize(new Dimension(50, 40));
         x1Field.setFont(new Font("Times New Roman", Font.BOLD, 20));
-        x1Field.setBackground(Color.decode("#B17457"));
+        x1Field.setBackground(Color.decode("#FFFFFFF"));
+        x1Field.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));;
 
         JLabel lcX2 = new JLabel("X2");
 
@@ -51,18 +51,21 @@ class ConstraintRow {
         x2Field = new JTextField();
         x2Field.setPreferredSize(new Dimension(50, 40));
         x2Field.setFont(new Font("Times New Roman", Font.BOLD, 20));
-        x2Field.setBackground(Color.decode("#B17457"));
+        x2Field.setBackground(Color.decode("#FFFFFF"));
+        x2Field.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));;
 
         String[] inequalities = {"<=", ">="};
         inequalityBox = new JComboBox<>(inequalities);
         inequalityBox.setPreferredSize(new Dimension(60, 40));
         inequalityBox.setFont(new Font("Times New Roman", Font.BOLD, 20));
-        inequalityBox.setBackground(Color.decode("#B17457"));
+        inequalityBox.setBackground(Color.decode("#FFFFFF"));
+        inequalityBox.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));;
 
         resultField = new JTextField();
         resultField.setPreferredSize(new Dimension(50, 40));
         resultField.setFont(new Font("Times New Roman", Font.BOLD, 20));
-        resultField.setBackground(Color.decode("#B17457"));
+        resultField.setBackground(Color.decode("#FFFFFF"));
+        resultField.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));;
 
         rowPanel.add(x1Field);
         rowPanel.add(lcX1);
@@ -100,7 +103,7 @@ public class LinearProgrammingGUI {
         JFrame frame = new JFrame("Linear Programming Problems");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1920, 1080);
-        frame.getContentPane().setBackground(Color.decode("#FAF7F0"));
+        frame.getContentPane().setBackground(Color.decode("#CCFFFFF"));
         frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 
         JLabel heading = new JLabel("LPP Solver");
@@ -115,7 +118,7 @@ public class LinearProgrammingGUI {
         JPanel objFunction = new JPanel();
         objFunction.setLayout(new FlowLayout(FlowLayout.CENTER));
         objFunction.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-        objFunction.setBackground(Color.decode("#FAF7F0"));
+        objFunction.setBackground(Color.decode("#CCFFFFF"));
 
         JLabel lz = new JLabel("Z =");
         JLabel lx1 = new JLabel("X1 +");
@@ -130,10 +133,12 @@ public class LinearProgrammingGUI {
         lx2.setFont(new Font("Arial", Font.BOLD, 20));
         tx1.setPreferredSize(new Dimension(50, 40));
         tx1.setFont(new Font("Arial", Font.BOLD, 20));
-        tx1.setBackground(Color.decode("#B17457"));
+        tx1.setBackground(Color.decode("#FFFFFF"));
+        tx1.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));;
         tx2.setPreferredSize(new Dimension(50, 40));
         tx2.setFont(new Font("Arial", Font.BOLD, 20));
-        tx2.setBackground(Color.decode("#B17457"));
+        tx2.setBackground(Color.decode("#FFFFFF"));
+        tx2.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));;
 
         objFunction.add(lz);
         objFunction.add(tx1);
@@ -146,12 +151,13 @@ public class LinearProgrammingGUI {
         String[] options = {"Maximize", "Minimize"};
         comboBox = new JComboBox<>(options);
         comboBox.setFont(new Font("Arial", Font.BOLD, 20));
-        comboBox.setBackground(Color.decode("#B17457"));
+        comboBox.setBackground(Color.decode("#FFFFFF"));
+        comboBox.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));;
 
         JPanel maxMin = new JPanel();
         maxMin.setLayout(new FlowLayout(FlowLayout.CENTER));
         maxMin.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-        maxMin.setBackground(Color.decode("#FAF7F0"));
+        maxMin.setBackground(Color.decode("#CCFFFFF"));
 
         // Set preferred size for the JComboBox
         comboBox.setPreferredSize(new Dimension(120, 40));
@@ -161,7 +167,7 @@ public class LinearProgrammingGUI {
         rowContainer.setLayout(new BoxLayout(rowContainer, BoxLayout.Y_AXIS));
 
         rowContainer.setPreferredSize(new Dimension(Integer.MAX_VALUE, 500));
-        rowContainer.setBackground(Color.decode("#FAF7F0"));
+        rowContainer.setBackground(Color.decode("#CCFFFFF"));
         frame.add(rowContainer);
         addConstraintRow();
         addConstraintRow();
@@ -174,13 +180,13 @@ public class LinearProgrammingGUI {
         plusButton.addActionListener(e -> {
             if (constraintRows.size() < 5) {
                 addConstraintRow();
-                frame.revalidate();
-                frame.repaint();
-                buttonPanel.revalidate();
+                rowContainer.setSize(new Dimension(Integer.MAX_VALUE, 300));
                 buttonPanel.repaint();
+
             }
         });
-        plusButton.setBackground(Color.decode("#B17457"));
+        plusButton.setBackground(Color.decode("#FFFFFF"));
+        plusButton.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));;
         plusButton.setFont(new Font("Arial", Font.BOLD, 20));
 
         JButton minusButton = new JButton("-");
@@ -188,11 +194,14 @@ public class LinearProgrammingGUI {
         minusButton.addActionListener(e -> {
             if (constraintRows.size() > 1) {
                 removeConstraintRow();
-                frame.revalidate();
+                rowContainer.setSize(new Dimension(Integer.MAX_VALUE, 300));
+
                 frame.repaint();
+
             }
         });
-        minusButton.setBackground(Color.decode("#B17457"));
+        minusButton.setBackground(Color.decode("#FFFFFF"));
+        minusButton.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));
         minusButton.setFont(new Font("Arial", Font.BOLD, 20));
 
         buttonPanel.add(plusButton);
@@ -213,18 +222,20 @@ public class LinearProgrammingGUI {
             }
 
         });
-        calculateButton.setBackground(Color.decode("#B17457"));
+        calculateButton.setBackground(Color.decode("#FFFFFF"));
+        calculateButton.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));;
 
         output = new JTextField();
         output.setPreferredSize(new Dimension(400, 45));
         output.setFont(new Font("Times New Roman", Font.BOLD, 16));
         output.setEditable(false);
-        output.setBackground(Color.decode("#B17457"));
+        output.setBackground(Color.decode("#FFFFFF"));
+        output.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));;
         // Center the button and output
         JPanel row6 = new JPanel();
         row6.setLayout(new FlowLayout(FlowLayout.CENTER));
         row6.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
-        row6.setBackground(Color.decode("#FAF7F0"));
+        row6.setBackground(Color.decode("#CCFFFFF"));
         row6.add(calculateButton);
         row6.add(output);
 
