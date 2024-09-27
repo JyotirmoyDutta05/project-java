@@ -35,7 +35,7 @@ class ConstraintRow {
         rowPanel = new JPanel();
         rowPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         rowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-        rowPanel.setBackground(Color.decode("#CCFFFFF"));
+        rowPanel.setBackground(Color.decode("#FFFFFA"));
         JLabel lcX1 = new JLabel("X1 +");
         x1Field = new JTextField();
         x1Field.setPreferredSize(new Dimension(50, 40));
@@ -97,13 +97,19 @@ public class LinearProgrammingGUI {
     static JPanel rowContainer;
     static JComboBox<String> comboBox;
     static JTextField output;
+    
+    public static void setRowBG(JPanel component,int size){
+        component.setLayout(new FlowLayout(FlowLayout.CENTER));
+        component.setMaximumSize(new Dimension(Integer.MAX_VALUE, size));
+        component.setBackground(Color.decode("#FFFFFA"));
+    }
 
     public static void main(String[] args) {
 
         JFrame frame = new JFrame("Linear Programming Problems");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1920, 1080);
-        frame.getContentPane().setBackground(Color.decode("#CCFFFFF"));
+        frame.setSize(600, 800);
+        frame.getContentPane().setBackground(Color.decode("#FFFFFA"));
         frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
 
         JLabel heading = new JLabel("LPP Solver");
@@ -116,9 +122,7 @@ public class LinearProgrammingGUI {
         frame.add(Box.createRigidArea(new Dimension(0, 10)));
 
         JPanel objFunction = new JPanel();
-        objFunction.setLayout(new FlowLayout(FlowLayout.CENTER));
-        objFunction.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-        objFunction.setBackground(Color.decode("#CCFFFFF"));
+        setRowBG(objFunction, 45);
 
         JLabel lz = new JLabel("Z =");
         JLabel lx1 = new JLabel("X1 +");
@@ -155,9 +159,7 @@ public class LinearProgrammingGUI {
         comboBox.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));;
 
         JPanel maxMin = new JPanel();
-        maxMin.setLayout(new FlowLayout(FlowLayout.CENTER));
-        maxMin.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-        maxMin.setBackground(Color.decode("#CCFFFFF"));
+        setRowBG(maxMin, 45);
 
         // Set preferred size for the JComboBox
         comboBox.setPreferredSize(new Dimension(120, 40));
@@ -167,13 +169,12 @@ public class LinearProgrammingGUI {
         rowContainer.setLayout(new BoxLayout(rowContainer, BoxLayout.Y_AXIS));
 
         rowContainer.setPreferredSize(new Dimension(Integer.MAX_VALUE, 500));
-        rowContainer.setBackground(Color.decode("#CCFFFFF"));
+        rowContainer.setBackground(Color.decode("#FFFFFA"));
         frame.add(rowContainer);
         addConstraintRow();
         addConstraintRow();
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setMaximumSize(new Dimension(1000, 45));
+        setRowBG(buttonPanel, 45);
 
         JButton plusButton = new JButton("+");
         plusButton.setPreferredSize(new Dimension(50, 30));
@@ -207,11 +208,10 @@ public class LinearProgrammingGUI {
         buttonPanel.add(plusButton);
         buttonPanel.add(minusButton);
         buttonPanel.setOpaque(false);
-        buttonPanel.setBackground(new Color(0, 0, 0, 0));
         frame.add(buttonPanel);
 
         JButton calculateButton = new JButton("Calculate");
-        calculateButton.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        
         calculateButton.addActionListener(e -> {
             try {
                 double x1Value = Double.parseDouble(tx1.getText().trim());
@@ -222,8 +222,10 @@ public class LinearProgrammingGUI {
             }
 
         });
+        calculateButton.setFont(new Font("Times New Roman", Font.BOLD, 20));
+        calculateButton.setPreferredSize(new Dimension(100,45));
         calculateButton.setBackground(Color.decode("#FFFFFF"));
-        calculateButton.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));;
+        calculateButton.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));
 
         output = new JTextField();
         output.setPreferredSize(new Dimension(400, 45));
@@ -231,11 +233,8 @@ public class LinearProgrammingGUI {
         output.setEditable(false);
         output.setBackground(Color.decode("#FFFFFF"));
         output.setBorder(BorderFactory.createLineBorder(Color.decode("#000000")));;
-        // Center the button and output
         JPanel row6 = new JPanel();
-        row6.setLayout(new FlowLayout(FlowLayout.CENTER));
-        row6.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
-        row6.setBackground(Color.decode("#CCFFFFF"));
+        setRowBG(row6, 90);
         row6.add(calculateButton);
         row6.add(output);
 
@@ -244,9 +243,7 @@ public class LinearProgrammingGUI {
         frame.setVisible(true);
     }
 
-    // add another constraint row
     private static void addConstraintRow() {
-
         ConstraintRow constraintRow = new ConstraintRow();
         constraintRows.add(constraintRow);//add rows
         rowContainer.add(constraintRow.getRowPanel());
@@ -256,7 +253,6 @@ public class LinearProgrammingGUI {
         rowContainer.repaint();
     }
 
-    // remove last row
     private static void removeConstraintRow() {
         if (!constraintRows.isEmpty()) {
             ConstraintRow lastRow = constraintRows.remove(constraintRows.size() - 1);//pop out last element ad set that last row
@@ -272,24 +268,24 @@ public class LinearProgrammingGUI {
         double max_x1 = Double.POSITIVE_INFINITY; // Initialize max_x1 to positive infinity
         for (int i = 0; i < constraints.length; i++) {
             if (constraints[i][0] > 0) { // Avoid division by zero
-                if (conditions[i] < 1) { // Check if the condition is less than or equal
-                    max_x1 = Math.min(max_x1, constraints[i][2] / constraints[i][0]); // Update max_x1
+                if (conditions[i] < 1) { 
+                    max_x1 = Math.min(max_x1, constraints[i][2] / constraints[i][0]); 
                 }
             }
         }
-        return max_x1; // Return the maximum value of x1 found
+        return max_x1; 
     }
 
     public static double getMaxX2(double[][] constraints, int[] conditions) {
         double max_x2 = Double.POSITIVE_INFINITY; // Initialize max_x2 to positive infinity
         for (int i = 0; i < constraints.length; i++) {
             if (constraints[i][1] != 0) { // Avoid division by zero
-                if (conditions[i] != 1) { // Check if the condition is not greater than or equal
-                    max_x2 = Math.min(max_x2, constraints[i][2] / constraints[i][1]); // Update max_x2
+                if (conditions[i] != 1) { 
+                    max_x2 = Math.min(max_x2, constraints[i][2] / constraints[i][1]); 
                 }
             }
         }
-        return max_x2+1000; // Return the maximum value of x2 found
+        return max_x2; 
     }
 
     private static Function[] createFunctions(double[][] constraints) {
@@ -301,8 +297,8 @@ public class LinearProgrammingGUI {
     }
 
     private static double[] solveMaximize(double[][] constraints, Function[] functions, double[] coefficients, int[] conditions) {
-        double maximumVal = Double.NEGATIVE_INFINITY; // Initialize maximumVal to negative infinity
-        double maxX2 = getMaxX2(constraints, conditions); // Get the maximum value of x2 based on constraints
+        double maximumVal = Double.NEGATIVE_INFINITY; 
+        double maxX2 = getMaxX2(constraints, conditions);
         double step = 0.0001; // Define a small step for incrementing x values
         double x = 0; // Initialize x
         double optimalX1 = 0;
